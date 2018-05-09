@@ -2,6 +2,17 @@ import sys;
 key = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.',' '];
 #pt = [14,6,31,30,28,12,20,3,30,8,8,7,31,23,18,18,1,4,23,31,28,8,0,0,0,15,17,15,18,15,3,8,10,3,13,21,2,28,8,30,0,26,3,1,30,21,10,28,21,1,26,25,17,4,0,26,7,5,11,29,20,8,31,5,15,10,10,6,1,0,12,15,2,31,3,29,31,17,29,7,4,9,30,8];
 
+if len(sys.argv) == 2:
+    word = sys.argv[1]
+    simplePrint = 0
+elif len(sys.argv) == 3:
+    if sys.argv[1] == '-sp':
+        simplePrint = 1
+    word = sys.argv[2]
+else:
+    print ("Invalid params")
+    sys.exit()
+    
 pairDict = {
 '00000' : ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
 '00001' : ['ab', 'cd', 'ef', 'gh', 'ij', 'kl', 'mn', 'op', 'qr', 'st', 'uv', 'wx', 'yz'],
@@ -72,41 +83,55 @@ from langdetect import detect
 #if detect(result2) == "en":print(result2);
 import enchant;
 d = enchant.Dict("en_US")
-word=sys.argv[1];
-print("Finding: "+word+" - len: "+str(len(word)));
-print("Length of text: "+str(len(pt)))
+
+#word=sys.argv[1]
+#if 1, disable verbose messages
+#simplePrint = 1
+
+if simplePrint != 1:
+    print("Finding: '"+word+"' - len: "+str(len(word)));
+    print("Length of text: "+str(len(pt)))
+    print
+
+#tracks the alternate plaintext at each position of the CT
 pt1 = []
-
 for i in range(0,len(pt)):
-    pt1.append(0)
+    pt1.append('')
 
+#loop through CT and detect for valid xor of PTs, save into matching position in pt1 array
 for i in range(0,len(pt)-len(word)+1):
     for j in range(0,len(word)):
         try:
-            letter = key[index(word[j])^pt[i+j]]
+            pt1[i] += key[index(word[j])^pt[i+j]]
         except IndexError:
-            #print ("Error: "+str(i))
+            #print ("Error: "+word[j]+" "+str(i))
+            pt1[i] = ''#destroy gathered data if invalid xor detected
             break
-        if (j == len(word)-1):
-            pt1[i] = 1
-if (0):
-    print "Found at pos: ",
+
+#prints the position numbers that detected as valid xor
+if (simplePrint != 1):
+    print "\nFound at pos: ",
     for i in range(0,len(pt1)):
-        if (pt1[i] == 1):
+        if (pt1[i] != ''):
             print str(i)+" ",
     print "\n"
 
+#loop through pt1 array and determine if elements contain english matching strings
 for i in range(0,len(pt1)):
-    if (pt1[i] == 1):
-        res = ""
-        for j in range(0,len(word)):
-            res += key[index(word[j])^pt[i+j]]
-        strs = res.split()
+    if (pt1[i] != ''):
+        strs = pt1[i].split()#split on spaces and detect each space separated element for english
         for x in range(0,len(strs)):
-            if (d.check(strs[x])):
-                #if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):
-                #    continue
-                print str(i)+"-"+str(i+len(res)-1)+' "'+res+'"'+" - "+"("+strs[x]+")\n",
+            if (d.check(strs[x])):#detects if string subelement is english
+                
+                if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
+                    continue
+                
+
+                #allow printing of only the matches
+                if simplePrint == 1:
+                    print pt1[i]
+                else:
+                    print str(i)+"-"+str(i+len(pt1[i])-1)+' "'+pt1[i]+'"'+" - "+"("+strs[x]+")\n",
                 break
 
 sys.exit()  

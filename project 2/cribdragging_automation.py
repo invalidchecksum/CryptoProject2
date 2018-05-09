@@ -44,27 +44,30 @@ unComTri = {'aaj', 'jaj', 'qex', 'zhi', 'aak', 'jaz', 'qfa', 'zhb', 'aax', 'jbo'
 	    'zdo', 'agv', 'jdd', 'qhn', 'zcr', 'agx', 'jdf', 'qho', 'zcp', 'ahg', 'jdg', 'qia', 'zck', 'ahk', 'jdh',
 		 'qib','zcd'}
 
-open("./dict.txt") as myfile
-while (x = myfile.readline()):
-    enwords.append(x)
-for i in range(0,len(enwords)):
-    enwords[i] = enwords[i].strip()
+with open("./dict.txt") as myfile:
+    lines = myfile.readlines()
+c = 0
+enwords = []
+for i in range(0,len(lines)):
+    if "-" in lines[i]:
+        continue
+    enwords.append(lines[i].strip())
+    #print "'"+enwords[c]+"'"
+    c+=1
 
 def index(a):
  for i in range(0,28):
   if key[i]== a: return i;
  return -1;
 
-s = "overnight the ";
-s2 ="at present a m";
 import bitstring;
 from bitstring import BitArray
 pt = []
 with open("ct3.txt") as f:
     content = f.readlines()
-#print(content);
+
 otherthing = [x.strip() for x in content];
-#print(otherthing);
+
 for i in range(0,len(otherthing)):
     nums = otherthing[i].split();
     for j in range(0,len(nums)):
@@ -76,21 +79,22 @@ for i in range(0,len(otherthing)):
 
 from langdetect import detect
 
-#if detect(result2) == "en":print(result2);
 import enchant;
 d = enchant.Dict("en_US")
 baseword=sys.argv[1];
 print("Finding: "+baseword+" - len: "+str(len(baseword)));
 print("Length of text: "+str(len(pt)))
 pt1 = []
+
 for i in range(0,len(pt)):
     pt1.append(0)
 word = baseword
+
 for n in range(0,len(enwords)):
     word = baseword+enwords[n]
     print (word)
 
-    for xxx in range(0,len(pt1)):
+    for i in range(0,len(pt1)):
         pt1[i] = 0
 
     for i in range(0,len(pt)-len(word)+1):
