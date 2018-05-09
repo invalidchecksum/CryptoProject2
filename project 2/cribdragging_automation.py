@@ -112,22 +112,24 @@ for n in range(0,len(enwords)):
                 #print ("Error: "+word[j]+" "+str(i))
                 pt1[i] = ''#destroy gathered data if invalid xor detected
                 break
-
+    flag = 1
     #loop through pt1 array and determine if elements contain english matching strings
     for i in range(0,len(pt1)):
         if (pt1[i] != ''):
             strs = pt1[i].split()#split on spaces and detect each space separated element for english
-            for x in range(0,len(strs)):
-                if (d.check(strs[x])):#detects if string subelement is english
-                    
-                    if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
-                        continue
-                    
-                    #allow printing of only the matches
-                    if simplePrint == 1:
-                        print pt1[i]
-                    else:
-                        print '"'+match+pt1[i]+'"'+" - "+"("+strs[x]+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
+            for x in range(0,len(strs)):                    
+                if x == len(strs) and pt1[i][len(pt1[i])] != ' ':
                     break
+                if (not d.check(strs[x])):#detects if string subelement is english
+                    flag = 0
+                    break
+                if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
+                    flag = 0
+                    break
+                
+            #allow printing of only the matches
+            if flag == 1:
+                #print pt1[i]
+                print '"'+match+pt1[i]+'"'+" - "+"("+enwords[n]+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
 
 sys.exit()  
