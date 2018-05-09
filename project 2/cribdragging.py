@@ -126,12 +126,11 @@ for i in range(0,len(pt1)):
                 if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
                     continue
                 
-
                 #allow printing of only the matches
                 if simplePrint == 1:
                     print pt1[i]
                 else:
-                    print str(i)+"-"+str(i+len(pt1[i])-1)+' "'+pt1[i]+'"'+" - "+"("+strs[x]+")\n",
+                    print '"'+pt1[i]+'"'+" - "+"("+strs[x]+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
                 break
 
 sys.exit()  

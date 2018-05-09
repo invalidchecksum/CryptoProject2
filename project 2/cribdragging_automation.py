@@ -44,6 +44,11 @@ unComTri = {'aaj', 'jaj', 'qex', 'zhi', 'aak', 'jaz', 'qfa', 'zhb', 'aax', 'jbo'
 	    'zdo', 'agv', 'jdd', 'qhn', 'zcr', 'agx', 'jdf', 'qho', 'zcp', 'ahg', 'jdg', 'qia', 'zck', 'ahk', 'jdh',
 		 'qib','zcd'}
 
+two = {'ad', 'an', 'am', 'at', 'be', 'by', 'do', 'ed', 'go', 'he', 'hi', 'in', 'is', 'it', 'me', 'my', 'no', 'ok',
+       'os', 'ox', 'so', 'to', 'uh', 'um', 'up', 'us', 'we', 'ya', 'yo'}
+
+three = {'and', 'the'}
+
 with open("./dict.txt") as myfile:
     lines = myfile.readlines()
 c = 0
@@ -81,49 +86,48 @@ from langdetect import detect
 
 import enchant;
 d = enchant.Dict("en_US")
-baseword=sys.argv[1];
+baseword=sys.argv[1]
+match=sys.argv[2]
+simplePrint = 0
+
 print("Finding: "+baseword+" - len: "+str(len(baseword)));
 print("Length of text: "+str(len(pt)))
 pt1 = []
 
 for i in range(0,len(pt)):
-    pt1.append(0)
+    pt1.append('')
 word = baseword
 
 for n in range(0,len(enwords)):
     word = baseword+enwords[n]
-    print (word)
+    #print (word)
 
-    for i in range(0,len(pt1)):
-        pt1[i] = 0
-
+    #loop through CT and detect for valid xor of PTs, save into matching position in pt1 array
     for i in range(0,len(pt)-len(word)+1):
-        for j in range(0,len(word)):
+        pt1[i] = ''#clear before starting each position
+        for j in range(len(baseword),len(word)):
             try:
-                letter = key[index(word[j])^pt[i+j]]
+                pt1[i] += key[index(word[j])^pt[i+j]]
             except IndexError:
-                #print ("Error: "+str(i))
+                #print ("Error: "+word[j]+" "+str(i))
+                pt1[i] = ''#destroy gathered data if invalid xor detected
                 break
-            if (j == len(word)-1):
-                pt1[i] = 1
-    if (0):
-        print "Found at pos: ",
-        for i in range(0,len(pt1)):
-            if (pt1[i] == 1):
-                print str(i)+" ",
-        print "\n"
 
+    #loop through pt1 array and determine if elements contain english matching strings
     for i in range(0,len(pt1)):
-        if (pt1[i] == 1):
-            res = ""
-            for j in range(0,len(word)):
-                res += key[index(word[j])^pt[i+j]]
-            strs = res.split()
+        if (pt1[i] != ''):
+            strs = pt1[i].split()#split on spaces and detect each space separated element for english
             for x in range(0,len(strs)):
-                if (d.check(strs[x])):
-                    #if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):
-                    #    continue
-                    print str(i)+"-"+str(i+len(res)-1)+' "'+res+'"'+" - "+"("+strs[x]+")\n",
+                if (d.check(strs[x])):#detects if string subelement is english
+                    
+                    if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
+                        continue
+                    
+                    #allow printing of only the matches
+                    if simplePrint == 1:
+                        print pt1[i]
+                    else:
+                        print '"'+match+pt1[i]+'"'+" - "+"("+strs[x]+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
                     break
 
 sys.exit()  
