@@ -44,15 +44,18 @@ unComTri = {'aaj', 'jaj', 'qex', 'zhi', 'aak', 'jaz', 'qfa', 'zhb', 'aax', 'jbo'
 	    'zdo', 'agv', 'jdd', 'qhn', 'zcr', 'agx', 'jdf', 'qho', 'zcp', 'ahg', 'jdg', 'qia', 'zck', 'ahk', 'jdh',
 		 'qib','zcd'}
 
+#likely 2 letter words
 two = {'ad', 'an', 'am', 'at', 'be', 'by', 'do', 'ed', 'go', 'he', 'hi', 'in', 'is', 'it', 'me', 'my', 'no', 'ok',
        'os', 'ox', 'so', 'to', 'uh', 'um', 'up', 'us', 'we', 'ya', 'yo'}
 
 three = {'and', 'the'}
 
+#open the dictionary and read in all lines
 with open("./dict.txt") as myfile:
     lines = myfile.readlines()
 c = 0
 enwords = []
+#filter out lines containing -
 for i in range(0,len(lines)):
     if "-" in lines[i]:
         continue
@@ -68,7 +71,7 @@ def index(a):
 import bitstring;
 from bitstring import BitArray
 pt = []
-with open("ct3.txt") as f:
+with open("ct1.txt") as f:
     content = f.readlines()
 
 otherthing = [x.strip() for x in content];
@@ -101,17 +104,17 @@ word = baseword
 for n in range(0,len(enwords)):
     word = baseword+enwords[n]
     #print (word)
-
     #loop through CT and detect for valid xor of PTs, save into matching position in pt1 array
     for i in range(0,len(pt)-len(word)+1):
         pt1[i] = ''#clear before starting each position
-        for j in range(len(baseword),len(word)):
+        for j in range(0,len(word)):
             try:
                 pt1[i] += key[index(word[j])^pt[i+j]]
             except IndexError:
                 #print ("Error: "+word[j]+" "+str(i))
                 pt1[i] = ''#destroy gathered data if invalid xor detected
                 break
+    
     flag = 1
     #loop through pt1 array and determine if elements contain english matching strings
     for i in range(0,len(pt1)):
@@ -133,5 +136,11 @@ for n in range(0,len(enwords)):
             if flag == 1:
                 #print pt1[i]
                 print '"'+match+pt1[i]+'"'+" - "+"("+word+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
+                if (1):
+                    print "\nFound at pos: ",
+                    for i in range(0,len(pt1)):
+                        if (pt1[i] != ''):
+                            print str(i)+" ",
+                    print "\n"
 
-sys.exit()  
+sys.exit()

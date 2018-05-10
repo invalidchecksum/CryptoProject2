@@ -4,8 +4,8 @@ open (FH1,"<","dict.txt");
 
 while ($x = <FH1>){
 	#if ($x =~ m/^p[^r].{2,15}/i){
-	#if ($x =~ m/nask$/){
-	if ($x =~ m/^nota/){
+	if ($x =~ m/ned$/){
+	#if ($x =~ m/^nota/){
 		push @x,$x;
 	}
 }

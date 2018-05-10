@@ -64,7 +64,7 @@ s2 ="at present a m";
 import bitstring;
 from bitstring import BitArray
 pt = []
-with open("ct3.txt") as f:
+with open("ct1.txt") as f:
     content = f.readlines()
 #print(content);
 otherthing = [x.strip() for x in content];
