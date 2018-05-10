@@ -126,10 +126,12 @@ for n in range(0,len(enwords)):
                 if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
                     flag = 0
                     break
-                
+                if not (len(strs[x]) == 2 and (strs[x] in two)):
+                    flag = 0
+                    break
             #allow printing of only the matches
             if flag == 1:
                 #print pt1[i]
-                print '"'+match+pt1[i]+'"'+" - "+"("+enwords[n]+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
+                print '"'+match+pt1[i]+'"'+" - "+"("+word+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
 
 sys.exit()  
