@@ -91,56 +91,58 @@ import enchant;
 d = enchant.Dict("en_US")
 baseword=sys.argv[1]
 match=sys.argv[2]
+pos=sys.argv[3]
 simplePrint = 0
 
 print("Finding: "+baseword+" - len: "+str(len(baseword)));
 print("Length of text: "+str(len(pt)))
 pt1 = []
 
-for i in range(0,len(pt)):
-    pt1.append('')
+
 word = baseword
+pos = int(pos)
+if pos >= len(pt):
+    print "Position >= Text Length"
+    sys.exit()
 
 for n in range(0,len(enwords)):
     word = baseword+enwords[n]
     #print (word)
-    #loop through CT and detect for valid xor of PTs, save into matching position in pt1 array
-    for i in range(0,len(pt)-len(word)+1):
-        pt1[i] = ''#clear before starting each position
-        for j in range(0,len(word)):
-            try:
-                pt1[i] += key[index(word[j])^pt[i+j]]
-            except IndexError:
-                #print ("Error: "+word[j]+" "+str(i))
-                pt1[i] = ''#destroy gathered data if invalid xor detected
-                break
+
+    if pos+len(word) >= len(pt):
+        continue
+    
+    result = ''#clear before starting each position
+    for j in range(0,len(word)):
+        try:
+            result += key[index(word[j])^pt[pos+j]]
+        except IndexError:
+            #print ("Error: "+word[j]+" "+str(pos+j))
+            result = ''#destroy gathered data if invalid xor detected
+            break
+
     
     flag = 1
     #loop through pt1 array and determine if elements contain english matching strings
-    for i in range(0,len(pt1)):
-        if (pt1[i] != ''):
-            strs = pt1[i].split()#split on spaces and detect each space separated element for english
-            for x in range(0,len(strs)):                    
-                if x == len(strs) and pt1[i][len(pt1[i])] != ' ':
-                    break
-                if (not d.check(strs[x])):#detects if string subelement is english
-                    flag = 0
-                    break
-                if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
-                    flag = 0
-                    break
-                if not (len(strs[x]) == 2 and (strs[x] in two)):
-                    flag = 0
-                    break
-            #allow printing of only the matches
-            if flag == 1:
-                #print pt1[i]
-                print '"'+match+pt1[i]+'"'+" - "+"("+word+") "+str(i)+"-"+str(i+len(pt1[i])-1)+"\n",
-                if (1):
-                    print "\nFound at pos: ",
-                    for i in range(0,len(pt1)):
-                        if (pt1[i] != ''):
-                            print str(i)+" ",
-                    print "\n"
+    if (result == ''):
+        continue
+    
+    strs = result.split()#split on spaces and detect each space separated element for english
+    for x in range(0,len(strs)):                    
+        #if x == len(strs) and pt1[i][len(result)] != ' ':
+        #    break
+        if (not d.check(strs[x])):#detects if string subelement is english
+            flag = 0
+            break
+        if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
+            flag = 0
+            break
+        #if not (len(strs[x]) == 2 and (strs[x] in two)):
+        #    flag = 0
+        #    break
+    #allow printing of only the matches
+    if flag == 1:
+        #print pt1[i]
+        print '"'+result+'"'+" - "+"("+word+") "+str(pos)+"-"+str(pos+len(result)-1)+"\n",
 
 sys.exit()
