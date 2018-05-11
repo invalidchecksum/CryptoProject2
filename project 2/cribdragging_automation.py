@@ -90,14 +90,10 @@ from langdetect import detect
 import enchant;
 d = enchant.Dict("en_US")
 baseword=sys.argv[1]
-match=sys.argv[2]
-pos=sys.argv[3]
-simplePrint = 0
+pos=sys.argv[2]
 
 print("Finding: "+baseword+" - len: "+str(len(baseword)));
 print("Length of text: "+str(len(pt)))
-pt1 = []
-
 
 word = baseword
 pos = int(pos)
@@ -105,44 +101,71 @@ if pos >= len(pt):
     print "Position >= Text Length"
     sys.exit()
 
+match=''
+#get the baseword match
+for j in range(0,len(baseword)):
+    try:
+        match += key[index(word[j])^pt[pos+j]]
+    except IndexError:
+        print "Baseword match error, cannot start unless baseword matches"
+        sys.exit()
+print "Match: \""+match+"\"\n"
+
 for n in range(0,len(enwords)):
-    word = baseword+enwords[n]
+    #skip empty string, spaces, or new line
+    if enwords[n]=='' or enwords[n]==' ' or enwords[n]=='\n':
+        continue
+    elif len(enwords[n])==1 and enwords[n]!='i' and enwords[n]!='a':
+        continue
+    elif len(enwords[n])==2 and not(enwords[n] in two):
+        continue
+    
+    word = baseword+enwords[n]+" "
     #print (word)
 
+    #word fits in length of plaintext at designated position
     if pos+len(word) >= len(pt):
         continue
     
     result = ''#clear before starting each position
-    for j in range(0,len(word)):
+    for j in range(len(baseword)-1,len(word)):
         try:
             result += key[index(word[j])^pt[pos+j]]
         except IndexError:
             #print ("Error: "+word[j]+" "+str(pos+j))
             result = ''#destroy gathered data if invalid xor detected
             break
-
-    
     flag = 1
     #loop through pt1 array and determine if elements contain english matching strings
     if (result == ''):
         continue
     
+    #if the result has 2 conesecutive spaces, skip
+    if result[0]==' ' or ".." in result:
+        continue
+
     strs = result.split()#split on spaces and detect each space separated element for english
+    #loop through space separated elements (i.e. potential words) and detect for english
     for x in range(0,len(strs)):                    
-        #if x == len(strs) and pt1[i][len(result)] != ' ':
-        #    break
         if (not d.check(strs[x])):#detects if string subelement is english
             flag = 0
             break
-        if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
+        if (x==len(strs) and len(strs[x]) == 2 and not(strs[x] in two)):
             flag = 0
             break
-        #if not (len(strs[x]) == 2 and (strs[x] in two)):
-        #    flag = 0
-        #    break
+        if (len(strs[x])==1 and strs[x]!='a' and strs[x]!='i'):#filter out 1 letter elements that are not i or a
+            if result[0]==strs[x] or result[len(result)-1]==strs[x]:
+                flag = 1
+                continue
+            else:
+                flag = 0
+                break
+    if flag==1 and result[len(result)-1] == ' ' and not (strs[len(strs)-1] in two):
+        continue
+    
     #allow printing of only the matches
     if flag == 1:
         #print pt1[i]
-        print '"'+result+'"'+" - "+"("+word+") "+str(pos)+"-"+str(pos+len(result)-1)+"\n",
+        print '"'+match+result[1:]+'"'+" - "+"("+word+") "+str(pos)+"-"+str(pos+len(result)-1)+"\n",
 
 sys.exit()

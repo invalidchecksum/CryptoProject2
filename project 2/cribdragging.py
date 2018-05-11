@@ -59,8 +59,6 @@ def index(a):
   if key[i]== a: return i;
  return -1;
 
-s = "overnight the ";
-s2 ="at present a m";
 import bitstring;
 from bitstring import BitArray
 pt = []
