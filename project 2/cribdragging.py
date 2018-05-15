@@ -62,7 +62,7 @@ def index(a):
 import bitstring;
 from bitstring import BitArray
 pt = []
-with open("ct1.txt") as f:
+with open("ct4.txt") as f:
     content = f.readlines()
 #print(content);
 otherthing = [x.strip() for x in content];
