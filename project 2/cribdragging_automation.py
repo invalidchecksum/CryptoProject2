@@ -141,7 +141,7 @@ for n in range(0,len(enwords)):
         continue
     
     #if the result has 2 conesecutive spaces, skip
-    if result[0]==' ' or ".." in result:
+    if '  ' in result or ".." in result:
         continue
 
     strs = result.split()#split on spaces and detect each space separated element for english
