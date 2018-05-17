@@ -71,7 +71,7 @@ def index(a):
 import bitstring;
 from bitstring import BitArray
 pt = []
-with open("ct1.txt") as f:
+with open("ct4.txt") as f:
     content = f.readlines()
 
 otherthing = [x.strip() for x in content];
@@ -150,18 +150,18 @@ for n in range(0,len(enwords)):
         if (not d.check(strs[x])):#detects if string subelement is english
             flag = 0
             break
-        if (x==len(strs) and len(strs[x]) == 2 and not(strs[x] in two)):
-            flag = 0
-            break
-        if (len(strs[x])==1 and strs[x]!='a' and strs[x]!='i'):#filter out 1 letter elements that are not i or a
-            if result[0]==strs[x] or result[len(result)-1]==strs[x]:
-                flag = 1
-                continue
-            else:
-                flag = 0
-                break
-    if flag==1 and result[len(result)-1] == ' ' and not (strs[len(strs)-1] in two):
-        continue
+        #if (x==len(strs) and len(strs[x]) == 2 and not(strs[x] in two)):
+        #    flag = 0
+        #    break
+        #if (len(strs[x])==1 and strs[x]!='a' and strs[x]!='i'):#filter out 1 letter elements that are not i or a
+        #    if result[len(result)-1]==strs[x]:
+        #        flag = 1
+        #        continue
+        #    else:
+        #        flag = 0
+        #        break
+    #if flag==1 and result[len(result)-1] == ' ' and not (strs[len(strs)-1] in two):
+    #   continue
     
     #allow printing of only the matches
     if flag == 1:
