@@ -143,13 +143,16 @@ for n in range(0,len(enwords)):
     #if the result has 2 conesecutive spaces, skip
     if '  ' in result or ".." in result:
         continue
-
+    
     strs = result.split()#split on spaces and detect each space separated element for english
     #loop through space separated elements (i.e. potential words) and detect for english
     for x in range(0,len(strs)):                    
-        if (not d.check(strs[x])):#detects if string subelement is english
+        if (not d.check(strs[x]) and len(strs[x])>2):#detects if string subelement is english
             flag = 0
+            #if enwords[n] == 'research':
+            #    print strs[x]+" "+str(flag)+"1"
             break
+<<<<<<< HEAD
         #if (x==len(strs) and len(strs[x]) == 2 and not(strs[x] in two)):
         #    flag = 0
         #    break
@@ -162,6 +165,27 @@ for n in range(0,len(enwords)):
         #        break
     #if flag==1 and result[len(result)-1] == ' ' and not (strs[len(strs)-1] in two):
     #   continue
+=======
+        if (x==len(strs) and len(strs[x]) == 2 and not(strs[x] in two)):
+            #if enwords[n] == 'research':
+            #    print strs[x]+" "+str(flag)+"2"
+            flag = 0
+            break
+        if (len(strs[x])==2 and x!=len(strs)-1 and (x not in two)):
+            flag = 0
+            break
+        if (len(strs[x])==1 and strs[x]!='a' and strs[x]!='i'):#filter out 1 letter elements that are not i or a
+            if result[len(result)-1]==strs[x]:
+                flag = 1
+                continue
+            else:
+                flag = 0
+                #if enwords[n] == 'research':
+                #    print strs[x]+" "+str(flag)+"3"
+                break
+    if flag==1 and result[len(result)-1] == ' ' and not (strs[len(strs)-1] in two):
+        continue
+>>>>>>> 4f18f02f2997b3c9dc34160f5ade548e4d362ead
     
     #allow printing of only the matches
     if flag == 1:
