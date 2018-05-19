@@ -56,30 +56,26 @@ unComTri = {'aaj', 'jaj', 'qex', 'zhi', 'aak', 'jaz', 'qfa', 'zhb', 'aax', 'jbo'
 
 def index(a):
  for i in range(0,28):
-  if key[i]== a: return i;
- return -1;
+  if key[i]== a: return i
+ return -1
 
 import bitstring;
 from bitstring import BitArray
 pt = []
 with open("ct4.txt") as f:
     content = f.readlines()
-#print(content);
-otherthing = [x.strip() for x in content];
-#print(otherthing);
+otherthing = [x.strip() for x in content]
 for i in range(0,len(otherthing)):
-    nums = otherthing[i].split();
+    nums = otherthing[i].split()
     for j in range(0,len(nums)):
-        b = BitArray(bin=nums[j]);
-        pt.append(b.uint);
-        numConv = str(b.uint);
-        #print(nums[j]+" "+str(b.uint));
-        #line += key[numConv];
-
+        b = BitArray(bin=nums[j])
+        pt.append(b.uint)
+        numConv = str(b.uint)
+        
 from langdetect import detect
 
 #if detect(result2) == "en":print(result2);
-import enchant;
+import enchant
 d = enchant.Dict("en_US")
 
 #word=sys.argv[1]
@@ -87,7 +83,7 @@ d = enchant.Dict("en_US")
 #simplePrint = 1
 
 if simplePrint != 1:
-    print("Finding: '"+word+"' - len: "+str(len(word)));
+    print("Finding: '"+word+"' - len: "+str(len(word)))
     print("Length of text: "+str(len(pt)))
     print
 
@@ -119,7 +115,7 @@ for i in range(0,len(pt1)):
     if (pt1[i] != ''):
         strs = pt1[i].split()#split on spaces and detect each space separated element for english
         for x in range(0,len(strs)):
-            if (d.check(strs[x])):#detects if string subelement is english
+            if (d.check(strs[x])):#detects if string sub-element is english
                 
                 if (len(strs[x]) == 1 and strs[x] != 'a' and strs[x] != 'i'):#filter out 1 letter elements that are not i or a
                     continue
